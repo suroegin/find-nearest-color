@@ -32,10 +32,21 @@ def find_nearest_color(input_color: Union[tuple, str]) -> dict:
     return min(solved_results, key=lambda x: x["diff"])
 
 
-def find_all_colors_in_file_and_write_result(xterm=False):
+def find_all_colors_in_file_and_write_result(xterm_number=False, xterm_name=False, hex=False, rgb=False):
 
     with open("source.txt", "r") as file:
         lines = file.readlines()
+
+    if xterm_number:
+        color_type = 'xterm_number'
+    elif xterm_name:
+        color_type = 'xterm_name'
+    elif hex:
+        color_type = 'hex'
+    elif rgb:
+        color_type = 'rgb'
+    else:
+        color_type = None
 
     colors = list()
     for line in lines:
@@ -52,7 +63,7 @@ def find_all_colors_in_file_and_write_result(xterm=False):
         max_left_justify = max([len(c) for c in colors])
         data = [
             f"{c.ljust(max_left_justify)} ---> " \
-            f"{find_nearest_color(c)['xterm_number'] if xterm else find_nearest_color(c)}\n"
+            f"{find_nearest_color(c)[color_type] if color_type else find_nearest_color(c)}\n"
             for c in colors
         ]
         file.write('\n\n' + " RESULT ".center(max([len(d) for d in data]), "#") + '\n')
